@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Weather Widget</title>
+    <meta name="author" content="Ricardo Tavares">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!-- build:css(.) styles/vendor.css -->
+    <!-- bower:css -->
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+    <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:css(.tmp) styles/main.css -->
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- endbuild -->
+</head>
+
+<body ng-app="weatherWidget" ng-controller="weatherCtrl">
+    <!--[if lte IE 8]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+    <div class="header">
+        <!-- Header content here -->
+    </div>
+
+    <div class="container">
+        <!-- Text iput to search cities -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></span>
+                    <input type="text" class="form-control" placeholder="Enter your city and then press enter" aria-describedby="city-search-field" ng-model="city" ng-enter="findWeather(city)" required>
+                </div>
+            </div>
+        </div>
+
+        <br>
+        <!-- Loading while load data from Yahoo API -->
+        <div ng-show="loading" class="progress">
+            <div class="progress-bar progress-bar-striped active" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100" style="width: 100%">{{loadingMsg}}</div>
+        </div>
+
+        <!-- Error handling -->
+        <div ng-hide="!showError" class="alert alert-danger ng-cloak" role="alert">
+            <p>{{error}}</p>
+        </div>
+
+        <!-- Forecast -->
+        <div ng-hide="!showData" class="ng-cloak">
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <div id="todayBox">
+                        <div id="alignRight">
+                            <!-- Choose between Celsius or Fahrenheit -->
+                            <div class="btn-group" data-toggle="buttons">
+                                <label class="btn btn-info btn-xs active" ng-click="setUnit('c')">
+                                    <input type="radio" name="options" autocomplete="off" checked> ºC
+                                </label>
+                                <label class="btn btn-info btn-xs" ng-click="setUnit('f')">
+                                    <input type="radio" name="options" autocomplete="off"> ºF
+                                </label>
+                            </div>
+                        </div>
+                        <!-- Today's weather -->
+                        <div id="alignCenter">
+                            <h1 id="extraBig">{{temp}}</h1>
+                            <h3>{{location}}</h3>
+                            <img ng-src="http://l.yimg.com/a/i/us/we/52/{{place.item.condition.code}}.gif" />
+                            <h4><small>{{text}}</small></h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <!-- Next 5 days  -->
+            <div class="row">
+                <div class="col-sm-1"></div>
+                <div ng-repeat="forecast in place.item.forecast | limitTo:5">
+                    <div class="col-sm-2">
+                        <div id="forecastBox">
+                            <p><strong>{{forecast.date}}</strong></p>
+                            <p><small>{{forecast.text}}</small></p>
+                            <img ng-src="http://l.yimg.com/a/i/us/we/52/{{forecast.code}}.gif" />
+                            <p>H: {{forecast.high}}&deg; | L: {{forecast.low}}&deg;</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-1"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <!-- Footer content here -->
+    </div>
+
+    <!-- build:js(.) scripts/vendor.js -->
+    <!-- bower:js -->
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:js({.tmp,app}) scripts/scripts.js -->
+    <script src="scripts/app.js"></script>
+    <script src="scripts/controllers/main.js"></script>
+    <!-- endbuild -->
+</body>
+
+</html>
